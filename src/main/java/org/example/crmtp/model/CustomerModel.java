@@ -2,7 +2,6 @@ package org.example.crmtp.model;
 
 import jakarta.persistence.*;
 import lombok.Data;
-import lombok.Getter;
 
 import java.util.List;
 
