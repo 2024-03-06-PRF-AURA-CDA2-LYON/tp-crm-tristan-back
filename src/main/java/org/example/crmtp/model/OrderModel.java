@@ -1,5 +1,7 @@
 package org.example.crmtp.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.Data;
 
@@ -22,6 +24,7 @@ public class OrderModel {
 
     @ManyToOne
     @JoinColumn(name = "client_id", nullable = false)
+    @JsonBackReference // Empêche la sérialisation récursive
     private CustomerModel customer;
 
     @Column(name = "nb_days", nullable = false)
