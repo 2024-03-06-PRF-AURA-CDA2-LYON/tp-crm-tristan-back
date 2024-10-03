@@ -7,8 +7,10 @@ import java.util.List;
 
 @Getter
 @Setter
-@NoArgsConstructor  // Génère un constructeur sans arguments
-@AllArgsConstructor  // Génère un constructeur avec tous les arguments
+// Génère un constructeur sans arguments
+@NoArgsConstructor
+// Génère un constructeur avec tous les arguments
+@AllArgsConstructor
 public class CustomerDTO {
     private Long id;
     private String companyName;
