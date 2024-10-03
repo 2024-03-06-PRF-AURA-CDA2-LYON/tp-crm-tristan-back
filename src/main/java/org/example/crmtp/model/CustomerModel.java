@@ -2,14 +2,16 @@ package org.example.crmtp.model;
 
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
-import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.util.List;
 
 
 @Entity
 @Table(name = "customer")
-@Data
+@Getter
+@Setter
 public class CustomerModel {
 
     @Id
@@ -43,8 +45,9 @@ public class CustomerModel {
     @Column(name = "city", nullable = false)
     private String city;
 
+    @Enumerated(EnumType.ORDINAL)
     @Column(name = "state")
-    private Integer state;
+    private CustomerState state;
 
     @OneToMany(mappedBy = "customer", cascade = CascadeType.ALL, orphanRemoval = true)
     @JsonManagedReference // Sérialise cette relation normalement

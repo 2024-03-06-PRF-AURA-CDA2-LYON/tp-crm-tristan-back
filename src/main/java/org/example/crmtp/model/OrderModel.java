@@ -2,13 +2,15 @@ package org.example.crmtp.model;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
-import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.math.BigDecimal;
 
 @Entity
 @Table(name = "orders")
-@Data
+@Getter
+@Setter
 public class OrderModel {
 
     @Id
@@ -32,8 +34,9 @@ public class OrderModel {
     @Column(name = "total_exclude_tax", nullable = false)
     private BigDecimal totalExcludeTax;
 
+    @Enumerated(EnumType.ORDINAL)
     @Column(name = "state")
-    private Integer state;
+    private OrderState state;
 
     @Column(name = "comment")
     private String comment;
