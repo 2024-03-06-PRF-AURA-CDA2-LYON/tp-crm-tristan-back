@@ -1,10 +1,8 @@
 package org.example.crmtp.model;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
-
 import java.math.BigDecimal;
 
 @Entity
@@ -25,7 +23,6 @@ public class OrderModel {
 
     @ManyToOne
     @JoinColumn(name = "client_id", nullable = false)
-    @JsonBackReference // Empêche la sérialisation récursive
     private CustomerModel customer;
 
     @Column(name = "nb_days", nullable = false)

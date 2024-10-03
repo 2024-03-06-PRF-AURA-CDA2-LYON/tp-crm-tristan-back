@@ -1,5 +1,6 @@
 package org.example.crmtp.controller;
 
+import org.example.crmtp.dto.OrderDTO;
 import org.example.crmtp.model.OrderModel;
 import org.example.crmtp.service.OrderService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,9 +24,11 @@ public class OrderController {
 
     // Lister les order
     @GetMapping
-    public List<OrderModel> getAllOrders() {
-        return orderService.getAllOrders();
+    public ResponseEntity<List<OrderDTO>> getAllOrders() {
+        List<OrderDTO> orders = orderService.getAllOrders();
+        return ResponseEntity.ok(orders);
     }
+
 
     // Ajouter une order et la lier à un customer
     @PostMapping("/{customerId}")

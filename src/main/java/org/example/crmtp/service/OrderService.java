@@ -1,11 +1,15 @@
 package org.example.crmtp.service;
 
+import org.example.crmtp.dto.CustomerDTO;
+import org.example.crmtp.dto.OrderDTO;
 import org.example.crmtp.model.CustomerModel;
 import org.example.crmtp.model.OrderModel;
 import org.example.crmtp.repository.CustomerRepository;
 import org.example.crmtp.repository.OrderRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -22,9 +26,41 @@ public class OrderService {
     }
 
     // Récupérer toutes les order
-    public List<OrderModel> getAllOrders() {
-        return orderRepository.findAll();
+    public List<OrderDTO> getAllOrders() {
+        List<OrderModel> orders = orderRepository.findAll();
+        List<OrderDTO> orderDTOs = new ArrayList<>();
+
+        for (OrderModel order : orders) {
+            OrderDTO orderDTO = new OrderDTO();
+            orderDTO.setId(order.getId());
+            orderDTO.setServiceType(order.getServiceType());
+            orderDTO.setTva(order.getTva());
+            orderDTO.setNbDays(order.getNbDays());
+            orderDTO.setTotalExcludeTax(order.getTotalExcludeTax());
+            orderDTO.setState(order.getState());
+            orderDTO.setComment(order.getComment());
+
+
+            CustomerDTO customerDTO = new CustomerDTO();
+            customerDTO.setId(order.getCustomer().getId());
+            customerDTO.setCompanyName(order.getCustomer().getCompanyName());
+            customerDTO.setFirstName(order.getCustomer().getFirstName());
+            customerDTO.setLastName(order.getCustomer().getLastName());
+            customerDTO.setEmail(order.getCustomer().getEmail());
+            customerDTO.setPhoneNumber(order.getCustomer().getPhoneNumber());
+            customerDTO.setAddress(order.getCustomer().getAddress());
+            customerDTO.setZipCode(order.getCustomer().getZipCode());
+            customerDTO.setCountry(order.getCustomer().getCountry());
+            customerDTO.setCity(order.getCustomer().getCity());
+            customerDTO.setState(order.getCustomer().getState());
+
+            orderDTO.setCustomer(customerDTO);
+            orderDTOs.add(orderDTO);
+        }
+
+        return orderDTOs;
     }
+
 
     // Récupérer une order par ID
     public Optional<OrderModel> getOrderById(Long id) {

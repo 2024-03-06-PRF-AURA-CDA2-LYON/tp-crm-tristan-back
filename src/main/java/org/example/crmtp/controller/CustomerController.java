@@ -1,5 +1,6 @@
 package org.example.crmtp.controller;
 
+import org.example.crmtp.dto.CustomerDTO;
 import org.example.crmtp.model.CustomerModel;
 import org.example.crmtp.service.CustomerService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,9 +24,11 @@ public class CustomerController {
 
     // Lister les customer
     @GetMapping
-    public List<CustomerModel> getAllCustomers() {
-        return customerService.getAllCustomers();
+    public ResponseEntity<List<CustomerDTO>> getAllCustomers() {
+        List<CustomerDTO> customers = customerService.getAllCustomers();
+        return ResponseEntity.ok(customers);
     }
+
 
     // Récup un customer via son ID
     @GetMapping("/{id}")

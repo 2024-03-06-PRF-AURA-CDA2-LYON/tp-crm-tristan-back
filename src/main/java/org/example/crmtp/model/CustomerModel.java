@@ -1,12 +1,9 @@
 package org.example.crmtp.model;
 
-import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
-
 import java.util.List;
-
 
 @Entity
 @Table(name = "customer")
@@ -50,7 +47,6 @@ public class CustomerModel {
     private CustomerState state;
 
     @OneToMany(mappedBy = "customer", cascade = CascadeType.ALL, orphanRemoval = true)
-    @JsonManagedReference // Sérialise cette relation normalement
     private List<OrderModel> orders;
 
 }
