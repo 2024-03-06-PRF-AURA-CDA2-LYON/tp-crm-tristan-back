@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class OrderService {
@@ -28,9 +29,7 @@ public class OrderService {
     // Récupérer toutes les order
     public List<OrderDTO> getAllOrders() {
         List<OrderModel> orders = orderRepository.findAll();
-        List<OrderDTO> orderDTOs = new ArrayList<>();
-
-        for (OrderModel order : orders) {
+        return orders.stream().map(order -> {
             OrderDTO orderDTO = new OrderDTO();
             orderDTO.setId(order.getId());
             orderDTO.setServiceType(order.getServiceType());
@@ -40,31 +39,39 @@ public class OrderService {
             orderDTO.setState(order.getState());
             orderDTO.setComment(order.getComment());
 
-
+            // Récupérer uniquement l'ID et le companyName du customer
             CustomerDTO customerDTO = new CustomerDTO();
             customerDTO.setId(order.getCustomer().getId());
             customerDTO.setCompanyName(order.getCustomer().getCompanyName());
-            customerDTO.setFirstName(order.getCustomer().getFirstName());
-            customerDTO.setLastName(order.getCustomer().getLastName());
-            customerDTO.setEmail(order.getCustomer().getEmail());
-            customerDTO.setPhoneNumber(order.getCustomer().getPhoneNumber());
-            customerDTO.setAddress(order.getCustomer().getAddress());
-            customerDTO.setZipCode(order.getCustomer().getZipCode());
-            customerDTO.setCountry(order.getCustomer().getCountry());
-            customerDTO.setCity(order.getCustomer().getCity());
-            customerDTO.setState(order.getCustomer().getState());
 
-            orderDTO.setCustomer(customerDTO);
-            orderDTOs.add(orderDTO);
-        }
+            orderDTO.setCustomer(customerDTO); // Assigner le customerDTO
 
-        return orderDTOs;
+            return orderDTO;
+        }).collect(Collectors.toList());
     }
 
+    // Recupp order par l'ID
+    public Optional<OrderDTO> getOrderById(Long id) {
+        Optional<OrderModel> orderOpt = orderRepository.findById(id);
+        return orderOpt.map(order -> {
+            OrderDTO orderDTO = new OrderDTO();
+            orderDTO.setId(order.getId());
+            orderDTO.setServiceType(order.getServiceType());
+            orderDTO.setTva(order.getTva());
+            orderDTO.setNbDays(order.getNbDays());
+            orderDTO.setTotalExcludeTax(order.getTotalExcludeTax());
+            orderDTO.setState(order.getState());
+            orderDTO.setComment(order.getComment());
 
-    // Récupérer une order par ID
-    public Optional<OrderModel> getOrderById(Long id) {
-        return orderRepository.findById(id);
+            // Récupérer uniquement l'ID et le companyName du customer
+            CustomerDTO customerDTO = new CustomerDTO();
+            customerDTO.setId(order.getCustomer().getId());
+            customerDTO.setCompanyName(order.getCustomer().getCompanyName());
+
+            orderDTO.setCustomer(customerDTO); // Assigner le customerDTO
+
+            return orderDTO;
+        });
     }
 
     // Créer une new order

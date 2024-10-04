@@ -1,13 +1,13 @@
 package org.example.crmtp.dto;
 
-import lombok.*;
+import lombok.Getter;
+import lombok.Setter;
 import org.example.crmtp.model.OrderState;
+
 import java.math.BigDecimal;
 
 @Getter
 @Setter
-@NoArgsConstructor
-@AllArgsConstructor
 public class OrderDTO {
     private Long id;
     private String serviceType;
@@ -16,5 +16,12 @@ public class OrderDTO {
     private BigDecimal totalExcludeTax;
     private OrderState state;
     private String comment;
+    @Setter
     private CustomerDTO customer;
+
+
+    public OrderDTO() {
+    }
+
+
 }

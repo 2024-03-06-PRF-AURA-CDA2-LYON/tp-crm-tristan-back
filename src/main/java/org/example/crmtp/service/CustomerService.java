@@ -25,9 +25,7 @@ public class CustomerService {
     // Récupérer tous les customer mais en evitant la répétition à l'infini
     public List<CustomerDTO> getAllCustomers() {
         List<CustomerModel> customers = customerRepository.findAll();
-        List<CustomerDTO> customerDTOs = new ArrayList<>();
-
-        for (CustomerModel customer : customers) {
+        return customers.stream().map(customer -> {
             CustomerDTO customerDTO = new CustomerDTO();
             customerDTO.setId(customer.getId());
             customerDTO.setCompanyName(customer.getCompanyName());
@@ -41,31 +39,76 @@ public class CustomerService {
             customerDTO.setCity(customer.getCity());
             customerDTO.setState(customer.getState());
 
-            List<OrderDTO> orderDTOs = customer.getOrders().stream()
-                    .map(order -> new OrderDTO(
-                            order.getId(),
-                            order.getServiceType(),
-                            order.getTva(),
-                            order.getNbDays(),
-                            order.getTotalExcludeTax(),
-                            order.getState(),
-                            order.getComment(),
-                            null  // pour eviter la répétition de customer
-                    ))
+            // Récupérer les commandes sans customer
+            List<OrderDTO> orderWithDTO = customer.getOrders().stream()
+                    .map(order -> {
+                        OrderDTO orderDTO = new OrderDTO();
+                        orderDTO.setId(order.getId());
+                        orderDTO.setServiceType(order.getServiceType());
+                        orderDTO.setTva(order.getTva());
+                        orderDTO.setNbDays(order.getNbDays());
+                        orderDTO.setTotalExcludeTax(order.getTotalExcludeTax());
+                        orderDTO.setState(order.getState());
+                        orderDTO.setComment(order.getComment());
+                        // Ne pas inclure le customer ici pour éviter la récursivité
+                        return orderDTO;
+                    })
                     .collect(Collectors.toList());
 
-            customerDTO.setOrders(orderDTOs);
-            customerDTOs.add(customerDTO);
+            customerDTO.setOrders(orderWithDTO);
+
+            return customerDTO;
+        }).collect(Collectors.toList());
+    }
+
+    // Get customer par l'ID
+    public Optional<CustomerDTO> getCustomerById(Long id) {
+        Optional<CustomerModel> optionalCustomer = customerRepository.findById(id);
+
+        if (optionalCustomer.isPresent()) {
+            CustomerModel customer = optionalCustomer.get();
+            CustomerDTO customerDTO = new CustomerDTO();
+
+            // Remplissage des propriétés de CustomerDTO
+            customerDTO.setId(customer.getId());
+            customerDTO.setCompanyName(customer.getCompanyName());
+            customerDTO.setFirstName(customer.getFirstName());
+            customerDTO.setLastName(customer.getLastName());
+            customerDTO.setEmail(customer.getEmail());
+            customerDTO.setPhoneNumber(customer.getPhoneNumber());
+            customerDTO.setAddress(customer.getAddress());
+            customerDTO.setZipCode(customer.getZipCode());
+            customerDTO.setCountry(customer.getCountry());
+            customerDTO.setCity(customer.getCity());
+            customerDTO.setState(customer.getState());
+
+            // Conversion des commandes sans inclure le customer
+            List<OrderDTO> orderWithDTO = customer.getOrders().stream()
+                    .map(order -> {
+                        OrderDTO orderDTO = new OrderDTO();
+                        orderDTO.setId(order.getId());
+                        orderDTO.setServiceType(order.getServiceType());
+                        orderDTO.setTva(order.getTva());
+                        orderDTO.setNbDays(order.getNbDays());
+                        orderDTO.setTotalExcludeTax(order.getTotalExcludeTax());
+                        orderDTO.setState(order.getState());
+                        orderDTO.setComment(order.getComment());
+                        // Ne pas inclure le customer dans l'OrderDTO pour éviter la récursivité
+                        return orderDTO;
+                    })
+                    .collect(Collectors.toList());
+
+            // Assigner les commandes au CustomerDTO
+            customerDTO.setOrders(orderWithDTO);
+
+            // Retourner le CustomerDTO encapsulé dans un Optional
+            return Optional.of(customerDTO);
+        } else {
+            return Optional.empty();
         }
-
-        return customerDTOs;
     }
 
 
-    // Récupérer un customer par sopn ID
-    public Optional<CustomerModel> getCustomerById(Long id) {
-        return customerRepository.findById(id);
-    }
 
     // Add un customer
     public CustomerModel createCustomer(CustomerModel customer) {

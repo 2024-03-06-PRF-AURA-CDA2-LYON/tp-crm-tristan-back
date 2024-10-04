@@ -43,8 +43,8 @@ public class OrderController {
 
     // Récup une order par son ID
     @GetMapping("/{id}")
-    public ResponseEntity<OrderModel> getOrderById(@PathVariable Long id) {
-        Optional<OrderModel> order = orderService.getOrderById(id);
+    public ResponseEntity<OrderDTO> getOrderById(@PathVariable Long id) {
+        Optional<OrderDTO> order = orderService.getOrderById(id);
         return order.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
     }
 
