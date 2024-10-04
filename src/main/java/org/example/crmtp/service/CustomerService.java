@@ -39,7 +39,7 @@ public class CustomerService {
             customerDTO.setState(customer.getState());
 
             // Récupérer les commandes sans customer
-            List<OrderDTO> orderWithDTO = customer.getOrders().stream()
+            List<OrderDTO> orderWithDTO = customer.getOrder().stream()
                     .map(order -> {
                         OrderDTO orderDTO = new OrderDTO();
                         orderDTO.setId(order.getId());
@@ -82,7 +82,7 @@ public class CustomerService {
             customerDTO.setState(customer.getState());
 
             // Conversion des commandes sans inclure le customer
-            List<OrderDTO> orderWithDTO = customer.getOrders().stream()
+            List<OrderDTO> orderWithDTO = customer.getOrder().stream()
                     .map(order -> {
                         OrderDTO orderDTO = new OrderDTO();
                         orderDTO.setId(order.getId());

@@ -49,7 +49,7 @@ public class CustomerModel {
     private CustomerState state;
 
     @OneToMany(mappedBy = "customer", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<OrderModel> orders = new ArrayList<OrderModel>();
+    private List<OrderModel> order = new ArrayList<>();
 
 }
 
