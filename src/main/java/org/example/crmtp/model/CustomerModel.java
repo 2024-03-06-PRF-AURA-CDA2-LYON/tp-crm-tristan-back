@@ -3,6 +3,8 @@ package org.example.crmtp.model;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
+
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -47,7 +49,7 @@ public class CustomerModel {
     private CustomerState state;
 
     @OneToMany(mappedBy = "customer", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<OrderModel> orders;
+    private List<OrderModel> orders = new ArrayList<OrderModel>();
 
 }
 
