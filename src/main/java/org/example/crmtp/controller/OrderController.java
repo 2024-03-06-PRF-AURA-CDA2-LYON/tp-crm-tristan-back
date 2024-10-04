@@ -31,15 +31,17 @@ public class OrderController {
 
 
     // Ajouter une order et la lier à un customer
-    @PostMapping("/{customerId}")
-    public ResponseEntity<OrderModel> createOrder(@RequestBody OrderModel order, @PathVariable Long customerId) {
+    @PostMapping
+    public ResponseEntity<OrderModel> createOrder(@RequestBody OrderModel order) {
         try {
-            OrderModel createdOrder = orderService.createOrder(order, customerId);
+            // Appelle le service pour créer la commande
+            OrderModel createdOrder = orderService.createOrder(order);
             return ResponseEntity.ok(createdOrder);
         } catch (RuntimeException e) {
-            return ResponseEntity.badRequest().build();
+            return ResponseEntity.badRequest().body(null);
         }
     }
+
 
     // Récup une order par son ID
     @GetMapping("/{id}")
@@ -52,12 +54,17 @@ public class OrderController {
     @PutMapping("/{id}")
     public ResponseEntity<OrderModel> updateOrder(@PathVariable Long id, @RequestBody OrderModel updatedOrder) {
         try {
-            OrderModel order = orderService.updateOrder(id, updatedOrder);
+            // Récupérer l'ID du client
+            Long customerId = updatedOrder.getCustomer() != null ? updatedOrder.getCustomer().getId() : null;
+            //Mettre à jour la commande et le client
+            OrderModel order = orderService.updateOrder(id, updatedOrder, customerId);
+
             return ResponseEntity.ok(order);
         } catch (RuntimeException e) {
             return ResponseEntity.notFound().build();
         }
     }
+
 
     // Suppr une order
     @DeleteMapping("/{id}")
